@@ -15,11 +15,16 @@ Ohne Parameter fragt das Programm nach einer Zahl:
 python gammafunktion.py
 ```
 
-Mit dem Parameter `k` werden die Gammafunktion von -3 bis 5 und die
-Fakultätskurve von -3 bis 4 in einem eigenen Fenster angezeigt.
-Der sichtbare y-Bereich ist auf -25 bis 25 begrenzt:
+Mit dem Parameter `k` werden die Gammafunktion, die selbstgemachte Gammafunktion
+und die Fakultätskurve
+von -6 bis 6 in einem eigenen Fenster angezeigt.
+Der sichtbare y-Bereich ist ebenfalls auf -6 bis 6 begrenzt.
+Beide Achsen haben denselben Maßstab; die Koordinatenachsen bei x = 0
+und y = 0 sind hervorgehoben.
 
-![Gammafunktion und Fakultätskurve](kurven.jpg)
+Frühere Darstellung mit dem y-Bereich von -25 bis 25:
+
+![Frühere Darstellung der Gammafunktion und Fakultätskurve](kurven.jpg)
 
 ```sh
 python -m pip install -r requirements.txt
@@ -27,7 +32,10 @@ python gammafunktion.py k
 ```
 
 Der Graph zeigt Gamma(x) als durchgezogene Kurve und x! = Gamma(x + 1)
-als gestrichelte Kurve. Die Gammafunktion erweitert dabei die Fakultät
+als gestrichelte Kurve. Die selbstgemachte Lanczos-Näherung
+`gammafunktionSelbstGemacht(x)` wird als gepunktete dritte Kurve angezeigt.
+Sie liegt aufgrund der hohen Genauigkeit nahezu auf der Gamma(x)-Kurve.
+Die Gammafunktion erweitert dabei die Fakultät
 auch auf nicht ganzzahlige Werte. An den Polstellen werden die Kurven
 unterbrochen: Gamma(x) ist bei 0, -1, -2, ... nicht definiert,
 Gamma(x + 1) bei -1, -2, ... . Werte außerhalb des sichtbaren
