@@ -1,30 +1,18 @@
 import math
 import argparse
 
+iterationen = 50
 
 def gammafunktionSelbstGemacht(zahl: float) -> float:
 	"""Berechnet die Fakultät einer positiven Zahl mithilfe der Gammafunktion (selbstgemacht)."""
 	if zahl < 0 and zahl % 1 == 0:
 		raise ValueError("Die Zahl darf nicht negativ UND ganzzahlig gerade sein.")
-	# Näherung der Gammafunktion nach Lanczos
-	p = [
-		676.5203681218851,
-		-1259.1392167224028,
-		771.32342877765313,
-		-176.61502916214059,
-		12.507343278686905,
-		-0.13857109526572012,
-		9.9843695780195716e-6,
-		1.5056327351493116e-7,
-	]
-	if zahl < 0.5:
-		return math.pi / (math.sin(math.pi * zahl) * gammafunktionSelbstGemacht(1 - zahl))
-	zahl -= 1
-	x = 0.99999999999980993
-	for i, pval in enumerate(p):
-		x += pval / (zahl + i + 1)
-	t = zahl + len(p) - 0.5
-	return math.sqrt(2 * math.pi) * t**(zahl + 0.5) * math.exp(-t) * x
+	# Näherung nach der von Leonhard Euler entdeckten Formel für die Gammafunktion
+	selbstBerechntesProdukt = 1
+	for n in range(1, iterationen):
+		selbstBerechnterWert = (1 + 1/n) ** (zahl - 1) * (1 + (zahl - 1) / n) ** -1
+		selbstBerechntesProdukt = selbstBerechnterWert * selbstBerechntesProdukt
+	return selbstBerechntesProdukt
 
 def gammafunktion(zahl: float) -> float:
 	"""Berechnet die Fakultät einer positiven Zahl mithilfe der Gammafunktion."""
@@ -40,11 +28,11 @@ def zeichne_gammafunktion() -> None:
 
 	x_werte = [i / 100 for i in range(-600, 601)]
 	# NaN unterbricht die Kurven an Polstellen, statt sie dort zu verbinden.
-	y_werte = [
+	gammawerte = [
 		math.nan if x <= 0 and x.is_integer() else math.gamma(x)
 		for x in x_werte
 	]
-	selbstgemachte_werte = [
+	gammawerte_selbstgemacht = [
 		math.nan if x <= 0 and x.is_integer() else gammafunktionSelbstGemacht(x)
 		for x in x_werte
 	]
@@ -52,13 +40,15 @@ def zeichne_gammafunktion() -> None:
 		math.nan if x <= -1 and x.is_integer() else math.gamma(x + 1)
 		for x in x_werte
 	]
-	fig, ax = plt.subplots()
-	ax.plot(x_werte, y_werte, label="Gamma(x)")
-	ax.plot(x_werte, fakultaetswerte, linestyle="--", label="x! = Gamma(x + 1)")
-	ax.plot(
-		x_werte, selbstgemachte_werte,
-		linestyle=":", linewidth=2, label="Gamma(x) selbstgemacht (Lanczos)",
-	)
+	fakultaetswerte_selbstgemacht = [
+		math.nan if x <= -1 and x.is_integer() else gammafunktionSelbstGemacht(x + 1)
+		for x in x_werte
+	]
+	fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
+	ax.plot(x_werte, gammawerte, color="blue", label="Gamma(x)")
+	ax.plot(x_werte, fakultaetswerte, color="green", label="x! = Gamma(x + 1)")
+	ax.plot(x_werte, gammawerte_selbstgemacht, color="red", linewidth=1, label=f"Gamma(x) ({iterationen} Iterationen)")
+	ax.plot(x_werte, fakultaetswerte_selbstgemacht, color="olive", linewidth=1, label=f"x! ({iterationen} Iterationen)")
 	ax.set_xlim(-6.0, 6.0)
 	ax.set_ylim(-6.0, 6.0)
 	ax.set_aspect("equal", adjustable="box")
