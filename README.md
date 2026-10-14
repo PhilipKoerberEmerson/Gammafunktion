@@ -1,5 +1,5 @@
 # Gammafunktion
-Eulers Gammafunktion selbst erstellt um sie besser zu verstehen
+Eulers Gammafunktion und die Fakultaet um deren Zusammenhang besser zu verstehen
 
 ## Verwendung
 
