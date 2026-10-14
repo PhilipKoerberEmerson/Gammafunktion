@@ -2,6 +2,8 @@
 Eulers Gammafunktion und die Fakultaet um deren Zusammenhang besser zu verstehen. Dazu verwendet dieses Python
 Programm die Gammafunktion aus `math` und eine Näherung nach der von Leonhard Euler entdeckten Formel für die Gammafunktion mit wählbarer Iterationszahl.
 
+![Gammafunktion und Fakultätskurve](kurven.jpg)
+
 ## Verwendung
 
 Die Fakultät kann mit einer Zahl als Kommandozeilenparameter berechnet werden:
@@ -40,10 +42,6 @@ Fenstergröße beeinflussen.
 Der sichtbare y-Bereich ist ebenfalls auf -6 bis 6 begrenzt.
 Beide Achsen haben denselben Maßstab; die Koordinatenachsen bei x = 0
 und y = 0 sind hervorgehoben.
-
-Frühere Darstellung mit dem y-Bereich von -25 bis 25:
-
-![Frühere Darstellung der Gammafunktion und Fakultätskurve](kurven.jpg)
 
 ```sh
 python -m pip install -r requirements.txt
