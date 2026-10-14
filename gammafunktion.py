@@ -12,17 +12,25 @@ def gammafunktion(zahl: float) -> float:
 def zeichne_gammafunktion() -> None:
 	import matplotlib.pyplot as plt
 
-	x_werte = [0.1 + (5.0 - 0.1) * i / 490 for i in range(491)]
-	y_werte = [math.gamma(x) for x in x_werte]
-	fakultaets_x_werte = [0.1 + (4.0 - 0.1) * i / 390 for i in range(391)]
-	fakultaetswerte = [math.gamma(x + 1) for x in fakultaets_x_werte]
+	x_werte = [i / 100 for i in range(-300, 501)]
+	# NaN unterbricht die Kurven an Polstellen, statt sie dort zu verbinden.
+	y_werte = [
+		math.nan if x <= 0 and x.is_integer() else math.gamma(x)
+		for x in x_werte
+	]
+	fakultaets_x_werte = [i / 100 for i in range(-300, 401)]
+	fakultaetswerte = [
+		math.nan if x <= -1 and x.is_integer() else math.gamma(x + 1)
+		for x in fakultaets_x_werte
+	]
 	fig, ax = plt.subplots()
 	ax.plot(x_werte, y_werte, label="Gamma(x)")
 	ax.plot(fakultaets_x_werte, fakultaetswerte, linestyle="--", label="x! = Gamma(x + 1)")
-	ax.set_xlim(0.1, 5.0)
+	ax.set_xlim(-3.0, 5.0)
+	ax.set_ylim(-25.0, 25.0)
 	ax.set_xlabel("x")
 	ax.set_ylabel("Funktionswert")
-	ax.set_title("Gammafunktion bis 5 und Fakultät bis 4")
+	ax.set_title("Gammafunktion von -3 bis 5 und Fakultät von -3 bis 4")
 	ax.grid(True)
 	ax.legend()
 	fig.tight_layout()
