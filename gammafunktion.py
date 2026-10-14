@@ -1,15 +1,17 @@
 import math
 import argparse
 
-iterationen = 50
-
-def gammafunktionSelbstGemacht(zahl: float) -> float:
+def gammafunktionSelbstGemacht(zahl: float, iterationen: int = 50) -> float:
 	"""Berechnet die Fakultät einer positiven Zahl mithilfe der Gammafunktion (selbstgemacht)."""
 	if zahl < 0 and zahl % 1 == 0:
 		raise ValueError("Die Zahl darf nicht negativ UND ganzzahlig gerade sein.")
 	# Näherung nach der von Leonhard Euler entdeckten Formel für die Gammafunktion
 	selbstBerechntesProdukt = 1
-	for n in range(1, iterationen):
+	if zahl > 0 and zahl % 1 == 0:
+		for faktor in range(1, int(zahl)):
+			selbstBerechntesProdukt *= faktor
+		return selbstBerechntesProdukt
+	for n in range(1, iterationen + 1):
 		selbstBerechnterWert = (1 + 1/n) ** (zahl - 1) * (1 + (zahl - 1) / n) ** -1
 		selbstBerechntesProdukt = selbstBerechnterWert * selbstBerechntesProdukt
 	return selbstBerechntesProdukt
@@ -23,7 +25,7 @@ def gammafunktion(zahl: float) -> float:
 	return math.gamma(zahl)
 
 
-def zeichne_gammafunktion() -> None:
+def zeichne_gammafunktion(iterationen: int = 50) -> None:
 	import matplotlib.pyplot as plt
 
 	x_werte = [i / 100 for i in range(-600, 601)]
@@ -33,7 +35,7 @@ def zeichne_gammafunktion() -> None:
 		for x in x_werte
 	]
 	gammawerte_selbstgemacht = [
-		math.nan if x <= 0 and x.is_integer() else gammafunktionSelbstGemacht(x)
+		math.nan if x <= 0 and x.is_integer() else gammafunktionSelbstGemacht(x, iterationen)
 		for x in x_werte
 	]
 	fakultaetswerte = [
@@ -41,7 +43,7 @@ def zeichne_gammafunktion() -> None:
 		for x in x_werte
 	]
 	fakultaetswerte_selbstgemacht = [
-		math.nan if x <= -1 and x.is_integer() else gammafunktionSelbstGemacht(x + 1)
+		math.nan if x <= -1 and x.is_integer() else gammafunktionSelbstGemacht(x + 1, iterationen)
 		for x in x_werte
 	]
 	fig, ax = plt.subplots(figsize=(8, 8), dpi=100)
@@ -74,32 +76,39 @@ def main() -> None:
 		nargs="?",
 		help="Zahl, deren Fakultät berechnet werden soll, oder 'k' für den Graphen",
 	)
+	parser.add_argument(
+		"iterationen",
+		nargs="?",
+		type=int,
+		help="Positive ganze Anzahl der Iterationen; wird sonst abgefragt",
+	)
 	args = parser.parse_args()
-
-	if args.zahl == "k":
-		zeichne_gammafunktion()
-		return
 
 	try:
 		zahl = args.zahl
 		if zahl is None:
-			zahl = input("Bitte gib eine positive Zahl ein, oder k für den Graphen: ")
+			zahl = input("Bitte gib eine Zahl ein, oder k für den Graphen: ")
+		iterationen = args.iterationen
+		if iterationen is None:
+			iterationen = int(input("Bitte gib die Anzahl der Iterationen für die selbstgemachte Gammafunktion ein: "))
+		if iterationen <= 0:
+			parser.error("Die Anzahl der Iterationen muss eine positive ganze Zahl sein.")
 		if zahl == "k":
-			zeichne_gammafunktion()
+			zeichne_gammafunktion(iterationen)
 			return
 		zahl = float(zahl)
 		ergebnis = gammafunktion(zahl)
-		selbstgemacht = gammafunktionSelbstGemacht(zahl)
+		selbstgemacht = gammafunktionSelbstGemacht(zahl, iterationen)
 		fakultaet = gammafunktion(zahl + 1)
-		fakultaetSelbstgemacht = gammafunktionSelbstGemacht(zahl + 1)
+		fakultaetSelbstgemacht = gammafunktionSelbstGemacht(zahl + 1, iterationen)
 		
 	except ValueError as error:
 		parser.error(str(error))
 
-	print(f"Gamma({zahl}) = {ergebnis}")
-	print(f"Gamma({zahl}) = {selbstgemacht} (selbstgemacht)")
-	print(f"      {zahl}! = {fakultaet}")
-	print(f"      {zahl}! = {fakultaetSelbstgemacht} (selbstgemacht)")
+	print(f"Gamma({zahl}) = {ergebnis:.3f}")
+	print(f"Gamma({zahl}) = {selbstgemacht:.3f} (selbstgemacht mit {iterationen} Iterationen)")
+	print(f"      {zahl}! = {fakultaet:.3f}")
+	print(f"      {zahl}! = {fakultaetSelbstgemacht:.3f} (selbstgemacht mit {iterationen} Iterationen)")
 	
 
 if __name__ == "__main__":
