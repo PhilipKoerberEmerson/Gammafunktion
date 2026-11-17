@@ -1,0 +1,27 @@
+alias: PersonOderBewegungErkanntSteckdose2an1bis10min
+description: Schaltet die Steckdose bei Personen- oder Bewegungserkennung für 1 bis 10 Minuten ein.
+
+trigger:
+  - platform: state
+    entity_id: binary_sensor.c510w_person_detection
+    to: "on"
+
+  - platform: state
+    entity_id: binary_sensor.c510w_motion_detection
+    to: "on"
+
+condition: []
+
+action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.dach_shellysteckdose2_907069587390
+
+  - delay:
+      seconds: "{{ range(60, 601) | random }}"
+
+  - service: switch.turn_off
+    target:
+      entity_id: switch.dach_shellysteckdose2_907069587390
+
+mode: restart
