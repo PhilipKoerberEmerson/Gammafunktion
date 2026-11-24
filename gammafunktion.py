@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import math
 import argparse
 
@@ -101,15 +102,13 @@ def main() -> None:
 		selbstgemacht = gammafunktionSelbstGemacht(zahl, iterationen)
 		fakultaet = gammafunktion(zahl + 1)
 		fakultaetSelbstgemacht = gammafunktionSelbstGemacht(zahl + 1, iterationen)
-		
 	except ValueError as error:
 		parser.error(str(error))
 
-	print(f"Gamma({zahl}) = {ergebnis:.3f}")
-	print(f"Gamma({zahl}) = {selbstgemacht:.3f} (selbstgemacht mit {iterationen} Iterationen)")
-	print(f"      {zahl}! = {fakultaet:.3f}")
-	print(f"      {zahl}! = {fakultaetSelbstgemacht:.3f} (selbstgemacht mit {iterationen} Iterationen)")
-	
+	print(f"Gamma({zahl}) = {ergebnis:.3f} (errechnet durch math.gamma({zahl}))")
+	print(f"Gamma({zahl}) = {selbstgemacht:.3f} (selbstgemacht mit {iterationen} Iterationen - Näherung nach Leonhard Euler)")
+	print(f"      {zahl}! = {fakultaet:.3f} (errechnet durch math.gamma({zahl} + 1))")
+	print(f"      {zahl}! = {fakultaetSelbstgemacht:.3f} (selbstgemacht mit {iterationen} Iterationen - Näherung nach Leonhard Euler)")
 
 if __name__ == "__main__":
 	main()
